@@ -1,0 +1,73 @@
+import openpyxl as opxl
+import docx as dcx
+import xlwings as xlw
+
+
+def orderinput():
+    print('Podaj koleność kolumn: 1(x,y,z) albo 2(y,x,z)\n'
+          'W przypadku braku współrzędnej z domyślnie przyjmujemy wysokość 0.00m n.p.m. (q=quit)')
+    prompt = '>'
+    xyorder = input(prompt)
+    ordercheck(xyorder)
+
+
+def ordercheck(xyorder):
+    if xyorder == 1:
+        print('Przyjęta kolejność kolumn: x, y, z.')
+    elif xyorder == 2:
+        print('Przyjęta kolejność kolumn: y, x, z.')
+    #    elif xyorder == q:
+    #        quit()
+    else:
+        print('Wpisałeś złą wartość. Spróbuj ponownie.')
+        orderinput()
+    return xyorder
+
+
+def tablemeasure(sht):
+    row_num = sht.max_row
+    print('Liczba wierszy: ' + str(row_num))
+    column_num = sht.max_column
+    print('Liczba kolumn: ' + str(column_num))
+    return row_num
+
+
+# if isinstance(sht.cell(row=1, column=1).value),(str))
+#    return True
+# else:
+#    x.is_integer()
+# break
+
+# if type(sht.cell(row=1,column=1).value) is str:
+#    print('1')
+# else:
+#    print('0')
+
+
+def main():
+    excel_file = 'sop_location.xlsx'
+    wb = opxl.load_workbook(excel_file)
+    sht = wb['Arkusz1']
+    row_num = sht.max_row
+    tablemeasure(sht)
+    orderinput()
+    doc = open('script.txt', 'w')
+    doc.write('pline')
+    point = {}
+    for i in range(row_num):
+        px = sht.cell(row=i + 1, column=1).value
+        py = sht.cell(row=i + 1, column=2).value
+        pz = sht.cell(row=i + 1, column=3).value
+        point = {'point_id': i + 1, 'x': px, 'y': py, 'z': pz}
+        doc.write('\n' + str(point['x']) + ',' + str(point['y']) + ',' + str(point['z']))
+        #    doc.write('\n' + str(i) + ' ' + str(point.get('x')))
+        print(point['point_id'])
+        print(point['x'], point['y'], point['z'])
+    doc.write('\n\n')
+    doc.close()
+
+
+if __name__ == "__main__":
+    main()
+
+print("koniec")
